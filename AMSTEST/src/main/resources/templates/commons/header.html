@@ -1,0 +1,661 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title th:text="${titles}"></title>
+	<link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/x-icon">
+	<link rel="stylesheet" th:href="@{/vendor/bootstrap/css/bootstrap.min.css}">
+	<link rel="stylesheet" th:href="@{/vendor/feather-icons-web/feather.css}">
+	<link rel="stylesheet" th:href="@{/vendor/fontawesome-free/css/all.min.css}">
+	<link rel="stylesheet" th:href="@{/vendor/data_table/jquery.dataTables.min.css}">
+	<link rel="stylesheet" th:href="@{/css/style.css}">
+	<script th:inline="javascript">
+
+		function calculateAttendance(attendanceData) {
+			const attendancePercentage = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+			const absentPercentage = [0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+			attendanceData.forEach(each => {
+							switch (each.semesterName) {
+								case "SEM-I":
+									attendancePercentage[0] = (each.currentAttendance / each.totalAttendance) * 100;
+									absentPercentage[0] = 100 - attendancePercentage[0];
+									break;
+								case "SEM-II":
+									attendancePercentage[1] = (each.currentAttendance / each.totalAttendance) * 100;
+									absentPercentage[1] = 100 - attendancePercentage[1];
+									break;
+								case "SEM-III":
+									attendancePercentage[2] = (each.currentAttendance / each.totalAttendance) * 100;
+									absentPercentage[2] = 100 - attendancePercentage[2];
+									break;
+								case "SEM-IV":
+									attendancePercentage[3] = (each.currentAttendance / each.totalAttendance) * 100;
+									absentPercentage[3] = 100 - attendancePercentage[3];
+									break;
+								case "SEM-V":
+									attendancePercentage[4] = (each.currentAttendance / each.totalAttendance) * 100;
+									absentPercentage[4] = 100 - attendancePercentage[4];
+									break;
+								case "SEM-VI":
+									attendancePercentage[5] = (each.currentAttendance / each.totalAttendance) * 100;
+									absentPercentage[5] = 100 - attendancePercentage[5];
+									break;
+								case "SEM-VII":
+									attendancePercentage[6] = (each.currentAttendance / each.totalAttendance) * 100;
+									absentPercentage[6] = 100 - attendancePercentage[6];
+									break;
+								case "SEM-VIII":
+									attendancePercentage[7] = (each.currentAttendance / each.totalAttendance) * 100;
+									absentPercentage[7] = 100 - attendancePercentage[7];
+									break;
+								case "SEM-IX":
+									attendancePercentage[8] = (each.currentAttendance / each.totalAttendance) * 100;
+									absentPercentage[8] = 100 - attendancePercentage[8];
+									break;
+							}
+						})
+
+						return {attendancePercentage, absentPercentage}
+					}
+
+
+
+		function showBarChatData(semesterArr, attendancePercentage, absentPercentage) {
+			$('.counter-up').counterUp({
+				delay: 10,
+				time: 1000
+			});
+
+			var ctx = document.getElementById('myChart').getContext('2d');
+			console.log("zzzzz");
+			console.log("0000", attendancePercentage);
+			let delayed;
+			var myChart = new Chart(ctx, {
+				type: 'bar',
+				data: {
+					labels: semesterArr,
+					datasets: [
+
+						{
+							label: 'Attendance Percentage',
+							data: attendancePercentage,
+							backgroundColor: [
+								'rgba(75, 192, 192, 0.2)',
+								'rgba(75, 192, 192, 0.2)',
+								'rgba(75, 192, 192, 0.2)',
+								'rgba(75, 192, 192, 0.2)',
+								'rgba(75, 192, 192, 0.2)',
+								'rgba(75, 192, 192, 0.2)',
+								'rgba(75, 192, 192, 0.2)',
+								'rgba(75, 192, 192, 0.2)',
+								'rgba(75, 192, 192, 0.2)',
+								'rgba(75, 192, 192, 0.2)',
+							],
+							borderColor: [
+								'rgba(75, 192, 192, 1)',
+								'rgba(75, 192, 192, 1)',
+								'rgba(75, 192, 192, 1)',
+								'rgba(75, 192, 192, 1)',
+								'rgba(75, 192, 192, 1)',
+								'rgba(75, 192, 192, 1)',
+								'rgba(75, 192, 192, 1)',
+								'rgba(75, 192, 192, 1)',
+								'rgba(75, 192, 192, 1)',
+								'rgba(75, 192, 192, 1)',
+							],
+							borderWidth: 1,
+							tension: 0
+						},
+						{
+							label: 'Absent Percentage',
+							data: absentPercentage,
+							backgroundColor: [
+								'rgba(255, 99, 132, 0.2)',
+								'rgba(255, 99, 132, 0.2)',
+								'rgba(255, 99, 132, 0.2)',
+								'rgba(255, 99, 132, 0.2)',
+								'rgba(255, 99, 132, 0.2)',
+								'rgba(255, 99, 132, 0.2)',
+								'rgba(255, 99, 132, 0.2)',
+								'rgba(255, 99, 132, 0.2)',
+								'rgba(255, 99, 132, 0.2)',
+								'rgba(255, 99, 132, 0.2)',
+							],
+							borderColor: [
+								'rgba(255,99,132,1)',
+								'rgba(255,99,132,1)',
+								'rgba(255,99,132,1)',
+								'rgba(255,99,132,1)',
+								'rgba(255,99,132,1)',
+								'rgba(255,99,132,1)',
+								'rgba(255,99,132,1)',
+								'rgba(255,99,132,1)',
+								'rgba(255,99,132,1)',
+								'rgba(255,99,132,1)',
+							],
+							borderWidth: 1,
+							tension: 0
+						},
+
+					]
+				},
+				options: {
+					animation: {
+						onComplete: () => {
+							delayed = true;
+						},
+						delay: (context) => {
+							let delay = 0;
+							if (context.mode === 'default' && !delayed) {
+								delay = context.dataIndex * 300 + context.datasetIndex * 100;
+							}
+							return delay;
+						},
+					},
+
+					scales: {
+						yAxes: [{
+							ticks: {
+								beginAtZero: true
+							}
+						}]
+					}
+				}
+			});
+		}
+
+
+		document.addEventListener("DOMContentLoaded", function () {
+			let semesterArr = ['Sem-I', 'Sem-II', 'Sem-III', 'Sem-IV', 'Sem-V', 'Sem-VI', 'Sem-VII', 'Sem-VIII', 'Sem-IX'];
+
+			// from pass data from java
+			let jsonArray = [[${jsonArray}]];
+			let attendanceData = JSON.parse(jsonArray);
+
+			console.log("dd", attendanceData);
+			// calculate attendance data
+			const {attendancePercentage, absentPercentage} = calculateAttendance(attendanceData);
+
+			console.log("%", attendancePercentage);
+			showBarChatData(semesterArr, attendancePercentage, absentPercentage);
+		});
+	</script>
+	<script th:inline="javascript">
+		document.addEventListener("DOMContentLoaded", function () {
+			let jsonArray = [[${jsonArray}]];
+			let timeSlotData = JSON.parse(jsonArray);
+			const teacherArr = [];
+			console.log("backend", timeSlotData);
+			const fixTimeSlot = [
+				{day_of_week: 1, "course1": "", "course2": "", "course3": "", "course4": "", "course5": "", "course6": ""},
+				{day_of_week: 2, "course1": "", "course2": "", "course3": "", "course4": "", "course5": "", "course6": ""},
+				{day_of_week: 3, "course1": "", "course2": "", "course3": "", "course4": "", "course5": "", "course6": ""},
+				{day_of_week: 4, "course1": "", "course2": "", "course3": "", "course4": "", "course5": "", "course6": ""},
+				{day_of_week: 5, "course1": "", "course2": "", "course3": "", "course4": "", "course5": "", "course6": ""}
+			];
+
+
+			timeSlotData.forEach(each => {
+
+				if (each.teacher_name) {
+					if (teacherArr.length > 0) {
+						const found = teacherArr.find(element => element.teacher_name === each.teacher_name && element.course_code === each.course_code
+							&& element.course_name === each.course_name);
+						if (!found) {
+							teacherArr.push({course_code: each.course_code, course_name: each.course_name, teacher_name: each.teacher_name});
+						}
+					} else {
+						teacherArr.push({course_code: each.course_code, course_name: each.course_name, teacher_name: each.teacher_name});
+					}
+				}
+
+
+				console.log(each.day_of_week);
+				switch (each.day_of_week) {
+
+					case 1:
+						fixTimeSlot[0] = checkStartTime(fixTimeSlot[0], each);
+						break;
+					case 2:
+						fixTimeSlot[1] = checkStartTime(fixTimeSlot[1], each);
+						break;
+					case 3:
+						fixTimeSlot[2] = checkStartTime(fixTimeSlot[2], each);
+						break;
+					case 4:
+						fixTimeSlot[3] = checkStartTime(fixTimeSlot[3], each);
+						break;
+					case 5:
+						fixTimeSlot[4] = checkStartTime(fixTimeSlot[4], each);
+						break;
+				}
+			})
+			console.log(fixTimeSlot);
+
+			fixTimeSlot.forEach(each => {
+				document.getElementById("tableBody").innerHTML += `
+                <tr>
+                    <th scope="row">${each.day_of_week == 1 ? "Monday" : each.day_of_week == 2 ? "Tuesday" : each.day_of_week == 3 ? "Wednesday" : each.day_of_week == 4 ? "Thursday" : "Friday"}</th>
+                    <td>${each.course1}</td>
+                    <td>${each.course2}</td>
+                    <td>${each.course3}</td>
+                    <td></td>
+                    <td>${each.course4}</td>
+                    <td>${each.course5}</td>
+                    <td>${each.course6}</td>
+                </tr>
+            `
+			})
+
+			if (teacherArr.length > 0) {
+				teacherArr.forEach(each => {
+					document.getElementById("timeTableDes").innerHTML += `
+								<div class="col-8">
+									<div class="row">
+									<div class="col-3">
+										<p>${each.course_code}</p>
+									</div>
+									<div class="col-5">
+													<p>${each.course_name}</p>
+													</div>
+									<div class="col-4">
+										<p>${each.teacher_name}</p>
+									</div>
+									</div>
+								</div>
+								`
+				})
+			}
+		});
+
+		function checkStartTime(timeSlot, each) {
+			switch (each.start_time) {
+				case "09:00":
+					console.log(each);
+					timeSlot = {...timeSlot, "course1": each.course_code}
+					break;
+				case "10:00":
+					timeSlot = {...timeSlot, "course2": each.course_code};
+					break;
+				case "11:00":
+					timeSlot = {...timeSlot, "course3": each.course_code};
+					break;
+				case "12:30":
+					timeSlot = {...timeSlot, "course4": each.course_code};
+					break;
+				case "13:30":
+					timeSlot = {...timeSlot, "course5": each.course_code};
+					break;
+				case "14:30":
+					timeSlot = {...timeSlot, "course6": each.course_code};
+					break;
+			}
+
+			return timeSlot;
+		}
+	</script>
+
+	<script th:inline="javascript">
+		tailwind.config = {
+			content: ["./*.html"],
+			darkMode: "class"
+		};
+
+		function fetchNrc() {
+			const selectedRegion = document.getElementById('region').value;
+
+			// Fetch data based on the selected region
+			fetch('/json/nrc.json')
+				.then(response => response.json())
+				.then(({data}) => {
+					const nrcs = data.filter(region => region.nrc_code === selectedRegion)
+					// Update the second dropdown with fetched results
+					const resultsDropdown = document.getElementById('code');
+					// Clear previous options
+					resultsDropdown.innerHTML = '';
+
+					// Add new options based on fetched data
+					nrcs.forEach(item => {
+						const option = document.createElement('option');
+						option.value = item.name_en;
+						option.text = item.name_en;
+						resultsDropdown.add(option);
+					});
+				})
+				.catch(error => console.error('Error fetching data:', error));
+		}
+
+
+		function enToMM(value) {
+			const mmNumbers = ["၀", "၁", "၂", "၃", "၄", "၅", "၆", "၇", "၈", "၉", "၁၀", "၁၁", "၁၂", "၁၃", "၁၄"];
+			return mmNumbers.find((mmNumber, key) => key == value)
+		}
+
+		function getNRC(value) {
+			return value.substring(1, 4);
+		}
+
+
+		// Apply dark mode if user prefers it
+		if (prefersDarkMode) {
+			document.body.classList.add('dark-mode');
+		}
+
+		// Toggle dark mode
+		document.getElementById('toggleMode').addEventListener('click', () => {
+			document.body.classList.toggle('dark-mode');
+			toggleIcons();
+		});
+
+		// Function to toggle icons based on mode
+		function toggleIcons() {
+			const darkModeIcons = document.querySelectorAll('.icon-toggle.dark-mode');
+			const lightModeIcons = document.querySelectorAll('.icon-toggle.light-mode');
+
+			darkModeIcons.forEach(icon => {
+				icon.style.display = document.body.classList.contains('dark-mode') ? 'inline-block' : 'none';
+			});
+
+			lightModeIcons.forEach(icon => {
+				icon.style.display = document.body.classList.contains('dark-mode') ? 'none' : 'inline-block';
+			});
+		}
+		toggleIcons();
+		function combineNrc(event) {
+			event.preventDefault(); // Prevent the form from submitting the traditional way
+
+			// Get values from the form elements
+			var region = document.getElementById('region').value;
+			var code = document.getElementById('code').value;
+			var numberType = document.getElementById('number_type').value;
+			var number = document.getElementById('number').value;
+
+			// Combine values into one NRC string
+			var combinedNrc = region + '/' + code + numberType + number;
+
+			// Set the value to the hidden input field
+			document.getElementById('nrcNo').value = combinedNrc;
+
+			// Convert FormData to a JSON object
+			const teacher = {
+				name: document.getElementById("name").value,
+				email: document.getElementById("email").value,
+				nrcNo: combinedNrc,
+				dob: document.getElementById("dob").value,
+				phoneNo: document.getElementById("phoneNo").value,
+				teacherRank: document.getElementById("rank").value,
+				highestDegree: document.getElementById("highestDegree").value,
+				faculty: document.getElementById("faculty").value,
+				registerDate: document.getElementById("registerDate").value,
+				password: document.getElementById("password").value,
+			};
+			console.log("teacher ------", teacher);
+
+			// Send the form data to the server using fetch
+			fetch('/admin/teacher-register', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+				},
+				body: JSON.stringify(teacher),
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					if (data.success) {
+						alert('Teacher registered successfully!');
+						window.location.href = "/admin/teacher-list";
+					} else {
+						alert('Failed to register teacher: ' + data.message);
+					}
+				})
+				.catch(error => {
+					console.error('There was a problem with the fetch operation:', error);
+					alert('An error occurred while registering the teacher.');
+				});
+		}
+
+		function editRoaster(e) {
+			e.preventDefault();
+			console.log(document.getElementById("id").value)
+			// Convert FormData to a JSON object
+			const list = {
+				name: document.getElementById("name").value,
+				nrcNo: document.getElementById("nrc").value,
+				phoneNo: document.getElementById("phone").value,
+				highestDegree: document.getElementById("highestDegree").value,
+				teacherRank: document.getElementById("rank").value,
+				email: document.getElementById("email").value,
+				semester: document.getElementById("semester").value,
+				dob: document.getElementById("dob").value,
+				faculty: document.getElementById("faculty").value,
+				id: document.getElementById("id").value,
+				role: document.getElementById("role").value,
+			};
+			console.log("teacher ------", list);
+
+			// Send the form data to the server using fetch
+			fetch('/admin/roaster-list', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+				},
+				body: JSON.stringify(list),
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					if (data.success) {
+						alert('Roster edited successfully!');
+						window.location.href = "/admin/class-roster";
+					} else {
+						alert('Failed to register teacher: ' + data.message);
+					}
+				})
+				.catch(error => {
+					console.error('There was a problem with the fetch operation:', error);
+					alert('An error occurred while registering the teacher.');
+				});
+		}
+
+		function resetPassword(e) {
+			e.preventDefault();
+
+			const list = {
+				id: document.getElementById("id").value,
+				email: document.getElementById("email").value,
+				role: document.getElementById("role").value,
+			};
+
+			console.log(list);
+
+			fetch('/admin/resetPwd', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+				},
+				body: JSON.stringify(list),
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					if (data.success) {
+						alert('Reset Password successfully! and Default password is 1234');
+						window.location.href = "/admin/dashboard";
+					} else {
+						alert('Failed: ' + data.message);
+					}
+				})
+				.catch(error => {
+					console.error('There was a problem with the fetch operation:', error);
+					alert('An error occurred');
+				});
+		}
+
+		function editTeacher(e) {
+			e.preventDefault();
+
+			const list = {
+				role: document.getElementById("role").value,
+				semester: document.getElementById("semester").value,
+				name: document.getElementById("name").value,
+				nrcNo: document.getElementById("nrc").value,
+				phoneNo: document.getElementById("phone").value,
+				email: document.getElementById("email").value,
+				dob: document.getElementById("dob").value,
+				highestDegree: document.getElementById("hd").value,
+				teacherRank: document.getElementById("rank").value,
+				faculty: document.getElementById("faculty").value,
+				id: document.getElementById("id").value,
+			};
+
+			console.log(list);
+
+			fetch('/admin/edit-list', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+				},
+				body: JSON.stringify(list),
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					if (data.success) {
+						alert('Teacher updated successfully');
+						window.location.href = "/admin/teacher-list";
+					} else {
+						alert('Failed: ' + data.message);
+					}
+				})
+				.catch(error => {
+					console.error('There was a problem with the fetch operation:', error);
+					alert('An error occurred');
+				});
+		}
+
+		function editStudent(e) {
+			e.preventDefault();
+
+			const list = {
+				rollNo: document.getElementById("hg").value,
+				nrcNo: document.getElementById("nrc").value,
+				semester: document.getElementById("semester").value,
+				phoneNo: document.getElementById("phone").value,
+				name: document.getElementById("name").value,
+				dob: document.getElementById("bod").value,
+				email: document.getElementById("email").value,
+				major: document.getElementById("major").value,
+				id: document.getElementById("id").value,
+			};
+
+			console.log(list);
+
+			fetch('/admin/stEdit-list', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+				},
+				body: JSON.stringify(list),
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					if (data.success) {
+						alert('Student updated successfully');
+						window.location.href = "/admin/student-list";
+					} else {
+						alert('Failed: ' + data.message);
+					}
+				})
+				.catch(error => {
+					console.error('There was a problem with the fetch operation:', error);
+					alert('An error occurred');
+				});
+		}
+
+
+		function editSem(e) {
+			e.preventDefault();
+
+			const list = {
+				id: document.getElementById("id").value,
+				semesterName: document.getElementById("sem").value,
+				startDate: document.getElementById("st").value,
+				endDate: document.getElementById("ed").value,
+			};
+
+			console.log(list);
+
+			fetch('/admin/sem-edit', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Accept': 'application/json',
+				},
+				body: JSON.stringify(list),
+			})
+				.then(response => {
+					if (!response.ok) {
+						throw new Error('Network response was not ok');
+					}
+					return response.json();
+				})
+				.then(data => {
+					if (data.success) {
+						alert('Semester updated successfully');
+						window.location.href = "/admin/sem-view";
+					} else {
+						alert('Failed: ' + data.message);
+					}
+				})
+				.catch(error => {
+					console.error('There was a problem with the fetch operation:', error);
+					alert('An error occurred');
+				});
+		}
+	</script>
+	<script>
+		function confirmDelete(url) {
+			if (confirm("Are you sure you want to delete?")) {
+				window.location.href = url;
+			}
+		}
+	</script>
+</head>
+
+<body>
+	<!--  -->
+	<section class="main container-fluid">
+		<div class="row">
